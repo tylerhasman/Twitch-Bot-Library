@@ -2,14 +2,19 @@ package me.tyler.twitchbot;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import org.pircbotx.Configuration;
 import org.pircbotx.Configuration.Builder;
 import org.pircbotx.PircBotX;
 import org.pircbotx.exception.IrcException;
 import org.pircbotx.hooks.Listener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.pircbotx.hooks.ListenerAdapter;
 
 public class TwitchBot extends PircBotX {
 
@@ -28,18 +33,55 @@ public class TwitchBot extends PircBotX {
 	
 	public TwitchBot(Configuration config){
 		super(config);
-		logger = LoggerFactory.getLogger("BOT");
+		logger = Logger.getLogger(config.getName());
+		
+		Formatter format = new Formatter(){
+
+			@Override
+			public String format(LogRecord record) {
+				
+				Date date = new Date(record.getMillis());
+				
+				return date.toString()+" ["+record.getLevel().getName()+"] "+record.getMessage();
+			}
+			
+		};
+		
+		logger.setUseParentHandlers(false);
+		
+		logger.addHandler(new ConsoleHandler(){
+			{
+				setFormatter(format);
+			}
+		});
+		
+		logger.setLevel(Level.INFO);
+		
 		groupServer = new GroupServer();
 	}
 	
+	/**
+	 * @see {@link Listener} or {@link ListenerAdapter}
+	 * @param listener The listener to add
+	 */
 	public void addListener(Listener listener){
 		getConfiguration().getListenerManager().addListener(listener);
 	}
 	
+	/**
+	 * <div>Enable or disable twitch capabilities,
+	 * this must be set before the bot is started for it to take effect
+	 * </div>
+	 * @see <a href=https://github.com/justintv/Twitch-API/blob/master/IRC.md>Twitch IRC Documentation</a> for more info
+	 */
 	public void setUseTwitchCapabilities(boolean useTwitchCapabilities) {
 		this.useTwitchCapabilities = useTwitchCapabilities;
 	}
 	
+	/**
+	 * 
+	 * @return true if capabilities are enabled
+	 */
 	public boolean isUsingTwitchCapabilities(){
 		return useTwitchCapabilities;
 	}
@@ -48,6 +90,10 @@ public class TwitchBot extends PircBotX {
 		groupServer = gs;
 	}
 	
+	/**
+	 * The group server is used to send whispers
+	 * @return the group server
+	 */
 	public GroupServer getGroupServer() {
 		return groupServer;
 	}
@@ -72,6 +118,10 @@ public class TwitchBot extends PircBotX {
 		return builder.buildConfiguration();
 	}
 
+	/**
+	 * <div>Starts the main bot and the {@link GroupServer}</div>
+	 * 
+	 */
 	@Override
 	public void startBot() throws IOException, IrcException {
 		groupServer.setup(getConfiguration().getName(), getConfiguration().getServerPassword(), "#"+getConfiguration().getName());

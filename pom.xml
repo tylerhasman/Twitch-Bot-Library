@@ -42,6 +42,7 @@
   		<groupId>org.slf4j</groupId>
   		<artifactId>slf4j-nop</artifactId>
   		<version>1.7.12</version>
+  		<scope>compile</scope>
   	</dependency>
   </dependencies>
 </project>

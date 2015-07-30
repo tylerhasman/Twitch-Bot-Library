@@ -21,7 +21,7 @@ public class GroupServer extends ListenerAdapter implements Runnable
 	
 	private GroupServerEventHandler handler;
 	
-	public void setup(String username, String authCode, String channel){
+	protected void setup(String username, String authCode, String channel){
 		Configuration config = new Configuration.Builder()
 		.setName(username)
 		.addServer(IP, PORT)
@@ -37,6 +37,12 @@ public class GroupServer extends ListenerAdapter implements Runnable
 		bot = new PircBotX(config);
 	}
 
+	/**
+	 * Sets the group servers handler. 
+	 * <div>Useful for handling whispers</div>
+	 * @see {@link GroupServerEventHandler}
+	 * @param handler the handler
+	 */
 	public void setHandler(GroupServerEventHandler handler){
 		this.handler = handler;
 	}
@@ -60,7 +66,7 @@ public class GroupServer extends ListenerAdapter implements Runnable
 			handler.onPrivateMessage(event);
 	}
 
-	public void startBot()
+	private void startBot()
 	{
 		try {
 			bot.startBot();
@@ -71,11 +77,11 @@ public class GroupServer extends ListenerAdapter implements Runnable
 		}
 	}
 
-	public void close()
-	{
-		bot.close();
-	}
-
+	/**
+	 * Send a whisper to a chatter
+	 * @param user the target
+	 * @param message the message
+	 */
 	public void sendWhisper(String user, String message)
 	{
 		bot.send().message(channel, "/w " + user + " " + message);
@@ -88,11 +94,15 @@ public class GroupServer extends ListenerAdapter implements Runnable
 	public GroupServerEventHandler getHandler() {
 		return handler;
 	}
-
+	
 	public void quit() {
 		bot.send().quitServer();
 	}
 
+	/**
+	 * @see {@link PircBotX#isConnected()}
+	 * @return true if the group server is ready to send and recieve whispers
+	 */
 	public boolean isConnected() {
 		return bot.isConnected();
 	}
