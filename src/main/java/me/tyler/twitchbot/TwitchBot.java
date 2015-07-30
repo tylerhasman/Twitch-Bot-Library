@@ -16,6 +16,11 @@ import org.pircbotx.exception.IrcException;
 import org.pircbotx.hooks.Listener;
 import org.pircbotx.hooks.ListenerAdapter;
 
+/**
+ * Twitch bot used for connecting to twitch.tv stream chats
+ * @author Tyler
+ *
+ */
 public class TwitchBot extends PircBotX {
 
 	private static final String SERVER = "irc.twitch.tv";
@@ -61,7 +66,7 @@ public class TwitchBot extends PircBotX {
 	}
 	
 	/**
-	 * @see {@link Listener} or {@link ListenerAdapter}
+	 * @see Listener
 	 * @param listener The listener to add
 	 */
 	public void addListener(Listener listener){
@@ -72,7 +77,8 @@ public class TwitchBot extends PircBotX {
 	 * <div>Enable or disable twitch capabilities,
 	 * this must be set before the bot is started for it to take effect
 	 * </div>
-	 * @see <a href=https://github.com/justintv/Twitch-API/blob/master/IRC.md>Twitch IRC Documentation</a> for more info
+	 * @param useTwitchCapabilities if set to true capabilities will be enabled once the bot has connected
+	 * @see <a href=https://github.com/justintv/Twitch-API/blob/master/IRC.md>Twitch IRC Documentation</a>
 	 */
 	public void setUseTwitchCapabilities(boolean useTwitchCapabilities) {
 		this.useTwitchCapabilities = useTwitchCapabilities;

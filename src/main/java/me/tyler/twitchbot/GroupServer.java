@@ -8,6 +8,11 @@ import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.ConnectEvent;
 import org.pircbotx.hooks.events.PrivateMessageEvent;
 
+/**
+ * Group server used for sending whispers over twitch chat
+ * @author Tyler
+ *
+ */
 public class GroupServer extends ListenerAdapter implements Runnable
 {
 
@@ -38,9 +43,8 @@ public class GroupServer extends ListenerAdapter implements Runnable
 	}
 
 	/**
-	 * Sets the group servers handler. 
+	 * Sets the group servers {@link GroupServerEventHandler} 
 	 * <div>Useful for handling whispers</div>
-	 * @see {@link GroupServerEventHandler}
 	 * @param handler the handler
 	 */
 	public void setHandler(GroupServerEventHandler handler){
@@ -100,7 +104,6 @@ public class GroupServer extends ListenerAdapter implements Runnable
 	}
 
 	/**
-	 * @see {@link PircBotX#isConnected()}
 	 * @return true if the group server is ready to send and recieve whispers
 	 */
 	public boolean isConnected() {
