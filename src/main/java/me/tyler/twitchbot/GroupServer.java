@@ -1,7 +1,6 @@
 package me.tyler.twitchbot;
 
 import java.io.IOException;
-
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.exception.IrcException;
@@ -22,9 +21,7 @@ public class GroupServer extends ListenerAdapter implements Runnable
 	
 	private GroupServerEventHandler handler;
 	
-	protected GroupServer(String username, String authCode, String channel)
-	{
-
+	public void setup(String username, String authCode, String channel){
 		Configuration config = new Configuration.Builder()
 		.setName(username)
 		.addServer(IP, PORT)
@@ -38,8 +35,6 @@ public class GroupServer extends ListenerAdapter implements Runnable
 		this.channel = channel;
 		
 		bot = new PircBotX(config);
-		
-		handler = null;
 	}
 
 	public void setHandler(GroupServerEventHandler handler){
@@ -49,15 +44,18 @@ public class GroupServer extends ListenerAdapter implements Runnable
 	@Override
 	public void onConnect(ConnectEvent event) throws Exception
 	{
+
 		bot.sendRaw().rawLineNow("CAP REQ :twitch.tv/commands");
 		
 		if(handler != null)
 			handler.onConnect(event);
+		
 	}
 
 	@Override
 	public void onPrivateMessage(PrivateMessageEvent event) throws Exception
 	{
+		
 		if(handler != null)
 			handler.onPrivateMessage(event);
 	}
@@ -85,6 +83,18 @@ public class GroupServer extends ListenerAdapter implements Runnable
 
 	public void run() {
 		startBot();
+	}
+
+	public GroupServerEventHandler getHandler() {
+		return handler;
+	}
+
+	public void quit() {
+		bot.send().quitServer();
+	}
+
+	public boolean isConnected() {
+		return bot.isConnected();
 	}
 
 }

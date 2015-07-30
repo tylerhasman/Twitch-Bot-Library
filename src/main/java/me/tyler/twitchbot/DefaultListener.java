@@ -2,10 +2,10 @@ package me.tyler.twitchbot;
 
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.ConnectEvent;
-import org.pircbotx.hooks.events.JoinEvent;
+import org.pircbotx.hooks.events.QuitEvent;
 
 public class DefaultListener extends ListenerAdapter {
-
+	
 	@Override
 	public void onConnect(ConnectEvent event) throws Exception {
 		
@@ -20,11 +20,10 @@ public class DefaultListener extends ListenerAdapter {
 	}
 	
 	@Override
-	public void onJoin(JoinEvent event) throws Exception {
+	public void onQuit(QuitEvent event) throws Exception {
 		TwitchBot bot = event.getBot();
 		
-		if(bot.getGroupServer() == null)
-			bot.setGroupServer(new GroupServer(bot.getConfiguration().getName(), bot.getConfiguration().getServerPassword(), event.getChannel().getName()));
+		bot.getGroupServer().quit();
 		
 	}
 	
