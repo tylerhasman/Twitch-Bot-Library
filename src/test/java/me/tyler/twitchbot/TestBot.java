@@ -2,6 +2,8 @@ package me.tyler.twitchbot;
 
 import java.io.IOException;
 
+import me.tyler.twitchbot.teespring.Teespring;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.pircbotx.exception.IrcException;
@@ -40,10 +42,18 @@ public class TestBot {
 				Assert.assertTrue(bot.getGroupServer().isConnected());
 				Assert.assertTrue(bot.getGroupServer().getHandler() != null);
 				
+				Teespring tspring = new Teespring("KittyPlaysTwitchCon", (n, ts) -> System.out.println());
+				
+				event.respond("Teespring info: "+tspring.getId()+" "+tspring.getName()+" "+tspring.getShirtsSold());
+				
 				bot.send().quitServer();
 			}
 			
 		});
+		
+		
+		
+		
 		
 		bot.startBot();
 		

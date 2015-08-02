@@ -15,6 +15,14 @@ import org.pircbotx.PircBotX;
 import org.pircbotx.exception.IrcException;
 import org.pircbotx.hooks.Listener;
 import org.pircbotx.hooks.ListenerAdapter;
+import org.quartz.JobDetail;
+import org.quartz.ScheduleBuilder;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerContext;
+import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
+import org.quartz.Trigger;
+import org.quartz.impl.StdSchedulerFactory;
 
 /**
  * Twitch bot used for connecting to twitch.tv stream chats
@@ -31,6 +39,8 @@ public class TwitchBot extends PircBotX {
 	private GroupServer groupServer;
 	
 	private Logger logger;
+	
+	private Scheduler scheduler;
 	
 	public TwitchBot(String username, String authcode, String... defaultChannels){	
 		this(getConfig(username, authcode, defaultChannels));
@@ -62,6 +72,13 @@ public class TwitchBot extends PircBotX {
 		
 		logger.setLevel(Level.INFO);
 		
+		try {
+			scheduler = StdSchedulerFactory.getDefaultScheduler();
+			scheduler.start();
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
+		
 		groupServer = new GroupServer();
 	}
 	
@@ -72,6 +89,20 @@ public class TwitchBot extends PircBotX {
 	public void addListener(Listener listener){
 		getConfiguration().getListenerManager().addListener(listener);
 	}
+	
+	/**
+	 * Schedule a job for execution
+	 * @param job the job
+	 * @param trigger the trigger for the job
+	 */
+	public void addTask(JobDetail job, Trigger trigger) {
+        try {
+            this.scheduler.scheduleJob(job, trigger);
+        }
+        catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+    }
 	
 	/**
 	 * <div>Enable or disable twitch capabilities,
