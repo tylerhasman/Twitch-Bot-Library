@@ -42,22 +42,13 @@ public class TestBot {
 				Assert.assertTrue(bot.getGroupServer().isConnected());
 				Assert.assertTrue(bot.getGroupServer().getHandler() != null);
 				
-				Teespring tspring = new Teespring("KittyPlaysTwitchCon", (n, ts) -> System.out.println());
-				
-				event.respond("Teespring info: "+tspring.getId()+" "+tspring.getName()+" "+tspring.getShirtsSold());
-				
-				bot.send().quitServer();
+				bot.close();
 			}
 			
 		});
 		
 		
-		
-		
-		
 		bot.startBot();
-		
-		bot.close();
 	}
 	
 }

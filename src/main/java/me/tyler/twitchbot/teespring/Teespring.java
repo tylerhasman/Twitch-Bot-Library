@@ -15,7 +15,7 @@ public class Teespring implements Job{
 	private static final String URL = "http://teespring.com/twitch/";
 	
 	private static final String AMOUNT_CLASS = "persistent_timer__order_count";
-	private static final String NAME_CLASS = "campaign__name campaign__name--old";
+	private static final String NAME_CLASS = "campaign__name";
 	
 	private String id;
 	private String name;
@@ -30,10 +30,19 @@ public class Teespring implements Job{
 		this.id = id;
 		this.handler = handler;
 		
-		Document doc = getWebDoc();
 		
-		shirtsSold = getLiveSoldShirts(doc);
-		name = getLiveName(doc);
+		
+		try{
+			
+			Document doc = getWebDoc();
+			
+			shirtsSold = getLiveSoldShirts(doc);
+			name = getLiveName(doc);
+	
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
 		
 	}
 	
@@ -81,8 +90,9 @@ public class Teespring implements Job{
 	
 	private Document getWebDoc(){
 		Document doc = null;
+		
 		try {
-			doc = Jsoup.connect(URL+id).userAgent("Mozilla").get();
+			doc = Jsoup.connect(URL+id).timeout(5000).userAgent("Mozilla").get();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
