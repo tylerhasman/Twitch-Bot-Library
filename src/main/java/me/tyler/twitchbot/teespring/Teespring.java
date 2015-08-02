@@ -22,6 +22,10 @@ public class Teespring implements Job{
 	private int shirtsSold;
 	private ShirtSoldHandler handler;
 	
+	/**
+	 * @param id the id should be the part after the last / in the url
+	 * @param handler the handler to handle shirts being sold
+	 */
 	public Teespring(String id, ShirtSoldHandler handler){
 		this.id = id;
 		this.handler = handler;
